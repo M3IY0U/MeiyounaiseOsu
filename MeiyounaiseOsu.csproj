@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,8 +10,8 @@
       <PackageReference Include="DSharpPlus.CommandsNext" Version="3.2.3" />
       <PackageReference Include="DSharpPlus.Interactivity" Version="3.2.3" />
       <PackageReference Include="Humanizer" Version="2.7.9" />
-      <PackageReference Include="OsuSharp" Version="5.3.2" />
-      <PackageReference Include="OsuSharp.Oppai" Version="5.3.2" />
+      <PackageReference Include="OsuSharp" Version="5.4.2" />
+      <PackageReference Include="OsuSharp.Oppai" Version="5.4.2" />
     </ItemGroup>
 
 </Project>

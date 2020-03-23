@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -136,6 +137,7 @@ namespace MeiyounaiseOsu.Discord
             public static async void TimerElapsed(object sender, ElapsedEventArgs e)
             {
                 Console.WriteLine("Polling for new top plays");
+                var usersToUpdate = new Dictionary<string, KeyValuePair<long, double>>();
                 foreach (var guild in DataStorage.Guilds)
                 {
                     foreach (var (user, oldTop) in guild.TopPlays)
@@ -144,7 +146,7 @@ namespace MeiyounaiseOsu.Discord
                         if (newTop.SequenceEqual(oldTop))
                             continue;
 
-                        for (var i = newTop.Count - 1; i >= 0; i--)
+                        for (var i = 0; i < newTop.Count; i++)
                         {
                             var play = newTop[i];
                             if (play.BeatmapId == oldTop[i].BeatmapId)
@@ -157,8 +159,8 @@ namespace MeiyounaiseOsu.Discord
                             var isDt = play.Mods.ToString().ToLower().Contains("doubletime") ||
                                        play.Mods.ToString().ToLower().Contains("nightcore");
                             var ssText = play.Rank != "SS" ? $" ({Math.Round(ssData.Pp, 2)}pp for SS)" : "";
-                            var gain = player.PerformancePoints - DataStorage.GetUser(user).Pp;
-                            var gainText = gain > 0 ? $"+{gain}" : $"-{gain}";
+                            var gain = Math.Round(player.PerformancePoints - DataStorage.GetUser(user).Pp, 2);
+                            var gainText = gain > 0 ? $"+{gain}pp" : $"-{gain}pp";
 
                             var eb = new DiscordEmbedBuilder()
                                 .WithAuthor($"New #{i + 1} for {user}!", $"https://osu.ppy.sh/users/{play.UserId}",
@@ -168,16 +170,23 @@ namespace MeiyounaiseOsu.Discord
                                 .WithDescription(
                                     $"» **[{map.Title} [{map.Difficulty}]](https://osu.ppy.sh/b/{map.BeatmapId})**\n" +
                                     $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {(!isDt ? map.Bpm : map.Bpm * 1.5)}bpm » +{play.Mods}\n" +
-                                    $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints, 2)}pp** ({gainText})\n" +
+                                    $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {DataStorage.GetUser(user).Pp} ⇒ **{Math.Round(player.PerformancePoints, 2)}** ({gainText})\n" +
                                     $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
                                     $"» {ssText} » #{DataStorage.GetUser(user).Rank} ⇒ #{player.Rank} ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n")
-                                .WithFooter(play.Date.Humanize());
+                                .WithFooter("Submitted " + play.Date?.AddHours(1).Humanize());
                             var channel = await Bot.Client.GetChannelAsync(guild.OsuChannel);
                             await channel.SendMessageAsync(embed: eb.Build());
                             guild.TopPlays.TryUpdate(user, newTop.ToList(), oldTop);
-                            DataStorage.GetUser(user).UpdateRank(player.Rank, player.PerformancePoints);
+                            if(!usersToUpdate.ContainsKey(user))
+                                usersToUpdate.Add(user, new KeyValuePair<long, double>(player.Rank, player.PerformancePoints));
+                            break;
                         }
                     }
+                }
+
+                foreach (var (user, (rank, pp)) in usersToUpdate)
+                {
+                    DataStorage.GetUser(user).UpdateRank(rank, pp);
                 }
             }
         }

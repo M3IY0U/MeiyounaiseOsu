@@ -54,7 +54,7 @@ namespace MeiyounaiseOsu.Core
             var pollingTimer = new Timer
             {
                 Enabled = true,
-                Interval = 20000,
+                Interval = 120000,
                 AutoReset = true
             };
 

@@ -33,7 +33,8 @@ namespace MeiyounaiseOsu.Discord
                 throw new Exception("I have no username set for you! Set it using `osuset [name]`.");
 
             var scores = await Client.GetScoresByBeatmapIdAndUsernameAsync(value, username, GameMode.Standard);
-            if (scores.Count == 0)
+
+            if (scores.Count == 0 || scores == null)
                 throw new Exception($"User {username} was not found or has no scores on the most recent map!");
 
             var map = await Client.GetBeatmapByIdAsync(value);
@@ -44,16 +45,16 @@ namespace MeiyounaiseOsu.Discord
                 userId = score.UserId;
 
                 var scoreIfFc = "";
+                var fcData = await OppaiClient.GetPPAsync(map.BeatmapId, score.Mods, (float) score.Accuracy,
+                    map.MaxCombo);
                 if (Utilities.IsChoke(score, map.MaxCombo))
                 {
-                    var fcData = await OppaiClient.GetPPAsync(map.BeatmapId, score.Mods, (float) score.Accuracy,
-                        map.MaxCombo);
                     scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)} FC)";
                 }
-
-                desc += $"■ **`{score.Mods}` Score** [{Math.Round(map.DifficultyRating, 2)}★]\n".Replace("None",
+                
+                desc += $"■ **`{score.Mods}` Score** [{Math.Round(fcData.Stars, 2)}★]\n".Replace("None",
                             "No Mod") +
-                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints, 2)}** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
+                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? 0.0, 2)}** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                         $"» {score.Date.Humanize()}\n\n";
             }

@@ -45,7 +45,7 @@ namespace MeiyounaiseOsu.Core
 
         public static bool IsChoke(Score score, int? maxCombo)
         {
-            return score.Rank == "F" || (score.Miss >= 1 || (score.MaxCombo <= 0.95 * maxCombo && score.Rank == "S"));
+            return score.Accuracy < 95 || score.Rank == "F" || (score.Miss >= 1 || (score.MaxCombo <= 0.95 * maxCombo && score.Rank == "S"));
         }
 
         public static async Task DownloadAsync(Uri requestUri, string filename)

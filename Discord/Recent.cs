@@ -78,10 +78,10 @@ namespace MeiyounaiseOsu.Discord
                 var point = Convert.ToDouble(objectTimes[hits - 1] - objectTimes[0]);
                 completion = $"» **Map Completion:** {Math.Round((point / timing) * 100, 2)}%";
             }
-
+            
             var eb = new DiscordEmbedBuilder()
                 .WithColor(ctx.Member.Color)
-                .WithAuthor($"{map.Title} [{map.Difficulty}] +{score.Mods} [{Math.Round(map.DifficultyRating, 2)}★]",
+                .WithAuthor($"{map.Title} [{map.Difficulty}] +{score.Mods} [{Math.Round(pData.Stars, 2)}★]",
                     $"https://osu.ppy.sh/b/{map.BeatmapId}", $"http://s.ppy.sh/a/{score.UserId}")
                 .WithThumbnailUrl(map.ThumbnailUri)
                 .WithDescription(
