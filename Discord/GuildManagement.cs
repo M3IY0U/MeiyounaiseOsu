@@ -177,6 +177,7 @@ namespace MeiyounaiseOsu.Discord
                             var channel = await Bot.Client.GetChannelAsync(guild.OsuChannel);
                             await channel.SendMessageAsync(embed: eb.Build());
                             guild.TopPlays.TryUpdate(user, newTop.ToList(), oldTop);
+                            guild.UpdateBeatmapInChannel(channel.Id, map.BeatmapId);
                             if(!usersToUpdate.ContainsKey(user))
                                 usersToUpdate.Add(user, new KeyValuePair<long, double>(player.Rank, player.PerformancePoints));
                             break;
