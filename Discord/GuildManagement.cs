@@ -170,9 +170,9 @@ namespace MeiyounaiseOsu.Discord
                                 .WithDescription(
                                     $"» **[{map.Title} [{map.Difficulty}]](https://osu.ppy.sh/b/{map.BeatmapId})**\n" +
                                     $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {(!isDt ? map.Bpm : map.Bpm * 1.5)}bpm » +{play.Mods}\n" +
-                                    $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {DataStorage.GetUser(user).Pp} ⇒ **{Math.Round(player.PerformancePoints, 2)}** ({gainText})\n" +
+                                    $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {ssText}\n" +
                                     $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
-                                    $"» {ssText} » #{DataStorage.GetUser(user).Rank} ⇒ #{player.Rank} ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n")
+                                    $"» {DataStorage.GetUser(user).Pp}pp ⇒ **{Math.Round(player.PerformancePoints, 2)}pp** ({gainText}) » #{DataStorage.GetUser(user).Rank} ⇒ #{player.Rank} ({player.Country.TwoLetterISORegionName}#{player.CountryRank}) \n")
                                 .WithFooter("Submitted " + play.Date?.AddHours(1).Humanize());
                             var channel = await Bot.Client.GetChannelAsync(guild.OsuChannel);
                             await channel.SendMessageAsync(embed: eb.Build());

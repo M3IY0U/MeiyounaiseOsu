@@ -74,7 +74,7 @@ namespace MeiyounaiseOsu.Discord
             {
                 var hits = score.Count50 + score.Count100 + score.Count300 + score.Miss;
                 var objectTimes = await Utilities.GetTotalObjectsAsync(map.BeatmapId);
-                var timing = Convert.ToDouble(objectTimes[objectTimes.Count - 1] - objectTimes[0]);
+                var timing = Convert.ToDouble(objectTimes[^1] - objectTimes[0]);
                 var point = Convert.ToDouble(objectTimes[hits - 1] - objectTimes[0]);
                 completion = $"» **Map Completion:** {Math.Round((point / timing) * 100, 2)}%";
             }
@@ -85,11 +85,11 @@ namespace MeiyounaiseOsu.Discord
                     $"https://osu.ppy.sh/b/{map.BeatmapId}", $"http://s.ppy.sh/a/{score.UserId}")
                 .WithThumbnailUrl(map.ThumbnailUri)
                 .WithDescription(
-                    $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(pData.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
+                    $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pData.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                     $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]" +
                     $"\n{completion}")
                 .WithFooter(
-                    $"Submitted {(score.Date.HasValue ? score.Date.Value.AddHours(1).Humanize() : "")} {(tries > 1 ? "| Try #" + tries : "")}");
+                    $"Submitted {(score.Date.HasValue ? score.Date.Value.Humanize() : "")} | Try #{tries}");
             await ctx.RespondAsync(embed: eb.Build());
             DataStorage.GetGuild(ctx.Guild).UpdateBeatmapInChannel(ctx.Channel.Id, map.BeatmapId);
         }
