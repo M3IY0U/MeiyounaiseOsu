@@ -62,13 +62,12 @@ namespace MeiyounaiseOsu.Discord
             var pData = await score.GetPPAsync();
             var fcData = await OppaiClient.GetPPAsync(map.BeatmapId, score.Mods, (float) score.Accuracy, map.MaxCombo);
 
-
             var tries = recents.TakeWhile(s => s.BeatmapId == score.BeatmapId).Count();
 
             var scoreIfFc = "";
             if (Utilities.IsChoke(score, map.MaxCombo))
                 scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)} FC)";
-
+            
             var completion = "";
             if (score.Rank == "F")
             {
@@ -89,7 +88,7 @@ namespace MeiyounaiseOsu.Discord
                     $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]" +
                     $"\n{completion}")
                 .WithFooter(
-                    $"Submitted {(score.Date.HasValue ? score.Date.Value.Humanize() : "")} | Try #{tries}");
+                    $"Submitted {score.Date.Humanize()} | Try #{tries}");
             await ctx.RespondAsync(embed: eb.Build());
             DataStorage.GetGuild(ctx.Guild).UpdateBeatmapInChannel(ctx.Channel.Id, map.BeatmapId);
         }

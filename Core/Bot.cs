@@ -48,7 +48,7 @@ namespace MeiyounaiseOsu.Core
 
             Client.GuildCreated += Guild.ClientOnGuildCreated;
             Client.MessageCreated += Guild.LogBeatmap;
-            Client.Ready += GuildManagement.Tracking.FetchTopPlays;
+            Client.Ready += Tracking.FetchTopPlays;
 
             _cnext.RegisterCommands(Assembly.GetEntryAssembly());
             var pollingTimer = new Timer
@@ -58,7 +58,7 @@ namespace MeiyounaiseOsu.Core
                 AutoReset = true
             };
 
-            pollingTimer.Elapsed += GuildManagement.Tracking.TimerElapsed;
+            pollingTimer.Elapsed += Tracking.TimerElapsed;
 
             _cnext.CommandErrored += async args =>
             {

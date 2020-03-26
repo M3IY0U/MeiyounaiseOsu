@@ -67,5 +67,18 @@ namespace MeiyounaiseOsu.Core
                 }
             }
         }
+        
+        public static async Task<string> ToHastebin(string content)
+        {
+            using (var client = new HttpClient())
+            {
+                var response = await client.PostAsync("https://haste.timostestdoma.in/documents",
+                    new StringContent(content));
+                var rs = await response.Content.ReadAsStringAsync();
+                var data = JsonConvert.DeserializeObject<dynamic>(rs);
+                return $"https://haste.timostestdoma.in/{data.key}";
+            }
+        }
+
     }
 }
