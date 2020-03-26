@@ -34,8 +34,8 @@ namespace MeiyounaiseOsu.Discord
                 ownAccount = DataStorage.GetUser(ctx.User).OsuUsername;
             if (string.IsNullOrEmpty(ownAccount))
                 throw new Exception("I have no username set for you! Set it using `osuset [name]`.");
-            var user1 = await Client.GetUserByUsernameAsync(ownAccount, DataStorage.GetUser(ownAccount).DefaultMode);
-            var user2 = await Client.GetUserByUsernameAsync(otherAccount, DataStorage.GetUser(ownAccount).DefaultMode);
+            var user1 = await Client.GetUserByUsernameAsync(ownAccount, GameMode.Standard);
+            var user2 = await Client.GetUserByUsernameAsync(otherAccount, GameMode.Standard);
 
             if (user1 == null || user2 == null)
                 throw new Exception("One or more users not found!");
