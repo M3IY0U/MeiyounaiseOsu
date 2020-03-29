@@ -24,14 +24,23 @@ namespace MeiyounaiseOsu.Discord
         }
 
         [Command("trackingchannel"), Aliases("tc")]
-        public async Task TrackingChannel(CommandContext ctx, DiscordChannel channel = null)
+        public async Task TrackingChannel(CommandContext ctx, DiscordChannel channel = null, string disable = "")
         {
             var guildChannel = DataStorage.GetGuild(ctx.Guild).OsuChannel;
+
+            if (disable == "disable")
+            {
+                DataStorage.GetGuild(ctx.Guild).OsuChannel = 0;
+                DataStorage.SaveGuilds();
+                await Utilities.ConfirmCommand(ctx.Message);
+                return;
+            }
+
             if (channel == null)
             {
                 await ctx.RespondAsync(guildChannel == 0
-                    ? "Currently not tracking top plays in any channel!"
-                    : $"Currently tracking top plays in channel <#{guildChannel}>");
+                    ? $"Currently not tracking top plays in any channel! (If you want to disable tracking, use `{DataStorage.GetGuild(ctx.Guild).Prefix}tc <any channel> disable`)"
+                    : $"Currently tracking top plays in channel <#{guildChannel}>. (If you want to disable tracking, use `{DataStorage.GetGuild(ctx.Guild).Prefix}tc <any channel> disable`)");
                 return;
             }
 
