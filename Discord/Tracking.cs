@@ -119,7 +119,7 @@ namespace MeiyounaiseOsu.Discord
         {
             Console.WriteLine("Polling for new top plays");
             var usersToUpdate = new Dictionary<string, KeyValuePair<long, double>>();
-            foreach (var guild in DataStorage.Guilds)
+            foreach (var guild in DataStorage.Guilds.Where(guild => guild.TrackedUsers.Count != 0 && guild.OsuChannel != 0))
             {
                 foreach (var (user, oldTop) in guild.TopPlays)
                 {
