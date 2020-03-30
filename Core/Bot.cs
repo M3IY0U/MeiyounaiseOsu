@@ -65,7 +65,7 @@ namespace MeiyounaiseOsu.Core
                 if (args.Exception.Message.Contains("command was not found"))
                     return;
                 await args.Context.Message.CreateReactionAsync(DiscordEmoji.FromUnicode("❎"));
-                await args.Context.RespondAsync($"Error: `{args.Exception.Message}`");
+                await args.Context.RespondAsync($"{args.Exception.Message}");
             };
 
             GC.KeepAlive(pollingTimer);

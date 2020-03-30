@@ -28,7 +28,17 @@ namespace MeiyounaiseOsu.Discord
                 throw new Exception(
                     "I don't know which map you mean, you can send one or use the recent command to refresh my memory");
             if (string.IsNullOrEmpty(username))
-                username = DataStorage.GetUser(ctx.User).OsuUsername;
+            {
+                try
+                {
+                    username = DataStorage.GetUser(ctx.User).OsuUsername;
+                }
+                catch (Exception)
+                {
+                    username = null;
+                }
+            }
+
             if (string.IsNullOrEmpty(username))
                 throw new Exception("I have no username set for you! Set it using `osuset [name]`.");
 
@@ -51,7 +61,7 @@ namespace MeiyounaiseOsu.Discord
                 {
                     scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)} FC)";
                 }
-                
+
                 desc += $"■ **`{score.Mods}` Score** [{Math.Round(fcData.Stars, 2)}★]\n".Replace("None",
                             "No Mod") +
                         $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? 0.0, 2)}** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +

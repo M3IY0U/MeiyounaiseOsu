@@ -31,7 +31,17 @@ namespace MeiyounaiseOsu.Discord
         public async Task UserCompare(CommandContext ctx, string otherAccount, string ownAccount = "")
         {
             if (string.IsNullOrEmpty(ownAccount))
-                ownAccount = DataStorage.GetUser(ctx.User).OsuUsername;
+            {
+                try
+                {
+                    ownAccount = DataStorage.GetUser(ctx.User).OsuUsername;
+                }
+                catch (Exception)
+                {
+                    ownAccount = null;
+                }
+            }
+
             if (string.IsNullOrEmpty(ownAccount))
                 throw new Exception("I have no username set for you! Set it using `osuset [name]`.");
             var user1 = await Client.GetUserByUsernameAsync(ownAccount, GameMode.Standard);

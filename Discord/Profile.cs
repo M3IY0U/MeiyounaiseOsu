@@ -42,10 +42,20 @@ namespace MeiyounaiseOsu.Discord
             await ShowProfile(ctx, username, GameMode.Catch);
         }
 
-        public async Task ShowProfile(CommandContext ctx, string username, GameMode gameMode)
+        private async Task ShowProfile(CommandContext ctx, string username, GameMode gameMode)
         {
             if (string.IsNullOrEmpty(username))
-                username = DataStorage.GetUser(ctx.User).OsuUsername;
+            {
+                try
+                {
+                    username = DataStorage.GetUser(ctx.User).OsuUsername;
+                }
+                catch (Exception)
+                {
+                    username = null;
+                }
+            }
+            
             if (string.IsNullOrEmpty(username))
                 throw new Exception("I have no username set for you! Set it using `osuset [name]`.");
 

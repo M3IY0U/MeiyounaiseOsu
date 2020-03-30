@@ -47,9 +47,20 @@ namespace MeiyounaiseOsu.Discord
         private async Task Exec(CommandContext ctx, GameMode gm, string username)
         {
             if (string.IsNullOrEmpty(username))
-                username = DataStorage.GetUser(ctx.User).OsuUsername;
+            {
+                try
+                {
+                    username = DataStorage.GetUser(ctx.User).OsuUsername;
+                }
+                catch (Exception)
+                {
+                    username = null;
+                }
+            }
+            
             if (string.IsNullOrEmpty(username))
-                throw new Exception("I have no username set for you! Set it using `osuset [name]`.");
+                throw new Exception(
+                    $"I have no username set for you! Set it using `{DataStorage.GetGuild(ctx.Guild).Prefix}osuset [name]`.");
 
             var recents = await Client.GetUserRecentsByUsernameAsync(username, gm);
             if (!recents.Any())
@@ -67,7 +78,7 @@ namespace MeiyounaiseOsu.Discord
             var scoreIfFc = "";
             if (Utilities.IsChoke(score, map.MaxCombo))
                 scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)} FC)";
-            
+
             var completion = "";
             if (score.Rank == "F")
             {
@@ -77,7 +88,7 @@ namespace MeiyounaiseOsu.Discord
                 var point = Convert.ToDouble(objectTimes[hits - 1] - objectTimes[0]);
                 completion = $"» **Map Completion:** {Math.Round((point / timing) * 100, 2)}%";
             }
-            
+
             var eb = new DiscordEmbedBuilder()
                 .WithColor(ctx.Member.Color)
                 .WithAuthor($"{map.Title} [{map.Difficulty}] +{score.Mods} [{Math.Round(pData.Stars, 2)}★]",
