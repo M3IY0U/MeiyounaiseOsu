@@ -66,13 +66,14 @@ namespace MeiyounaiseOsu.Discord
                             "No Mod") +
                         $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? 0.0, 2)}** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
-                        $"» {score.Date.Humanize()}\n\n";
+                        $"» Score set {score.Date.Humanize()}";
             }
 
             var eb = new DiscordEmbedBuilder()
                 .WithAuthor($"Top osu! Standard Plays for {username} on {map.Title} [{map.Difficulty}]",
                     $"https://osu.ppy.sh/users/{userId}", $"http://s.ppy.sh/a/{userId}")
-                .WithDescription(desc)
+                .WithDescription($"{desc}\n» **[Map Link]({map.BeatmapUri})**")
+                .WithThumbnailUrl(map.ThumbnailUri)
                 .WithColor(ctx.Member.Color);
             await ctx.RespondAsync(embed: eb.Build());
         }

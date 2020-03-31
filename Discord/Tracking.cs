@@ -18,7 +18,7 @@ using Utilities = MeiyounaiseOsu.Core.Utilities;
 
 namespace MeiyounaiseOsu.Discord
 {
-    [RequireUserPermissions(Permissions.Administrator)]
+    [RequireUserPermissions(Permissions.ManageMessages)]
     [Group("track")]
     public class Tracking
     {
@@ -153,7 +153,8 @@ namespace MeiyounaiseOsu.Discord
                                 $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {ssText}\n" +
                                 $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
                                 $"» {Math.Round(DataStorage.GetUser(user).Pp, 2)}pp ⇒ **{Math.Round(player.PerformancePoints, 2)}pp** ({gain}pp)\n" +
-                                $"» #{DataStorage.GetUser(user).Rank} ⇒ **#{player.Rank}** ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n")
+                                $"» #{DataStorage.GetUser(user).Rank} ⇒ **#{player.Rank}** ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n" +
+                                $"» **[Map Link]({map.BeatmapUri})**")
                             .WithFooter("Submitted " + play.Date?.Humanize());
                         var channel = await Bot.Client.GetChannelAsync(guild.OsuChannel);
                         await channel.SendMessageAsync(embed: eb.Build());

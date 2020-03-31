@@ -92,12 +92,13 @@ namespace MeiyounaiseOsu.Discord
             var eb = new DiscordEmbedBuilder()
                 .WithColor(ctx.Member.Color)
                 .WithAuthor($"{map.Title} [{map.Difficulty}] +{score.Mods} [{Math.Round(pData.Stars, 2)}★]",
-                    $"https://osu.ppy.sh/b/{map.BeatmapId}", $"http://s.ppy.sh/a/{score.UserId}")
+                    $"https://osu.ppy.sh/users/{score.UserId}", $"http://s.ppy.sh/a/{score.UserId}")
                 .WithThumbnailUrl(map.ThumbnailUri)
                 .WithDescription(
                     $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pData.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
-                    $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]" +
-                    $"\n{completion}")
+                    $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
+                    $"{completion}\n" +
+                    $"» **[Map Link]({map.BeatmapUri})**")
                 .WithFooter(
                     $"Submitted {score.Date.Humanize()} | Try #{tries}");
             await ctx.RespondAsync(embed: eb.Build());
