@@ -86,7 +86,7 @@ namespace MeiyounaiseOsu.Discord
                 var objectTimes = await Utilities.GetTotalObjectsAsync(map.BeatmapId);
                 var timing = Convert.ToDouble(objectTimes[^1] - objectTimes[0]);
                 var point = Convert.ToDouble(objectTimes[hits - 1] - objectTimes[0]);
-                completion = $"» **Map Completion:** {Math.Round((point / timing) * 100, 2)}%";
+                completion = $"» **Map Completion:** {Math.Round((point / timing) * 100, 2)}%\n";
             }
 
             var eb = new DiscordEmbedBuilder()
@@ -97,7 +97,7 @@ namespace MeiyounaiseOsu.Discord
                 .WithDescription(
                     $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pData.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                     $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
-                    $"{completion}\n" +
+                    $"{completion}" +
                     $"» **[Map Link]({map.BeatmapUri})**")
                 .WithFooter(
                     $"Submitted {score.Date.Humanize()} | Try #{tries}");
