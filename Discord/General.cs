@@ -8,7 +8,7 @@ using OsuSharp;
 
 namespace MeiyounaiseOsu.Discord
 {
-    public class General
+    public class General : BaseCommandModule
     {
         public OsuClient Client;
 
@@ -62,7 +62,7 @@ namespace MeiyounaiseOsu.Discord
 
             var eb = new DiscordEmbedBuilder()
                 .WithAuthor($"Comparing {user1.Username} with {user2.Username}",
-                    icon_url: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Osu%21Logo_%282015%29.png")
+                    iconUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Osu%21Logo_%282015%29.png")
                 .WithColor(ctx.Member.Color)
                 .AddField(
                     DiscordEmoji.FromName(Bot.Client, $":flag_{user1.Country.TwoLetterISORegionName.ToLower()}:") +

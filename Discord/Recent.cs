@@ -11,8 +11,8 @@ using OsuSharp.Oppai;
 
 namespace MeiyounaiseOsu.Discord
 {
-    [Group("recent", CanInvokeWithoutSubcommand = true), Aliases("rs")]
-    public class Recent
+    [Group("recent"), Aliases("rs")]
+    public class Recent : BaseCommandModule
     {
         private OsuClient Client;
 
@@ -21,7 +21,8 @@ namespace MeiyounaiseOsu.Discord
             Client = client;
         }
 
-        public async Task ExecuteGroupAsync(CommandContext ctx, string username = "")
+        [GroupCommand]
+        public async Task Osu(CommandContext ctx, string username = "")
         {
             await Exec(ctx, GameMode.Standard, username);
         }

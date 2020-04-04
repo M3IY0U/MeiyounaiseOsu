@@ -10,7 +10,7 @@ using MeiyounaiseOsu.Core;
 
 namespace MeiyounaiseOsu.Discord
 {
-    public class BotOwnerModule
+    public class BotOwnerModule : BaseCommandModule
     {
         [Command("update"), RequireOwner, Hidden]
         public async Task Update(CommandContext ctx)

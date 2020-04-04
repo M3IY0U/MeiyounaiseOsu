@@ -20,15 +20,20 @@ namespace MeiyounaiseOsu.Discord
 {
     [RequireUserPermissions(Permissions.ManageMessages)]
     [Group("track")]
-    public class Tracking
+    public class Tracking : BaseCommandModule
     {
-        private static OsuClient _client;
-        private InteractivityModule Interactivity;
+        private static OsuClient _client = new OsuClient(new OsuSharpConfiguration
+        {
+            ApiKey = Utilities.GetKey("osu"),
+            ModeSeparator = " | "
+        });
 
-        public Tracking(OsuClient client, InteractivityModule interactivity)
+        private InteractivityExtension Interactivity;
+
+        public Tracking(OsuClient client)
         {
             _client = client;
-            Interactivity = interactivity;
+            Interactivity = Bot.Client.GetInteractivity();
         }
 
         [Command("add")]
@@ -74,7 +79,7 @@ namespace MeiyounaiseOsu.Discord
         {
             await ctx.RespondAsync("Are you sure you want to clear the list? Please confirm by typing `confirm`.");
             var response = await Interactivity.WaitForMessageAsync(message => message.Author == ctx.Message.Author);
-            if (response.Message.Content == "confirm")
+            if (response.Result.Content == "confirm")
             {
                 DataStorage.GetGuild(ctx.Guild).TrackedUsers.Clear();
                 DataStorage.SaveGuilds();
@@ -90,7 +95,7 @@ namespace MeiyounaiseOsu.Discord
                 var file = new StreamReader("update.txt");
                 var chn = await Bot.Client.GetChannelAsync(Convert.ToUInt64(file.ReadLine()));
                 await chn.SendMessageAsync(
-                    $"Back online.\nRestart took {Math.Round(DateTime.Now.Subtract(DateTime.Parse(file.ReadLine())).TotalSeconds), 2} seconds.");
+                    $"Back online.\nRestart took {Math.Round(DateTime.Now.Subtract(DateTime.Parse(file.ReadLine())).TotalSeconds),2} seconds.");
                 file.Close();
                 File.Delete("update.txt");
             }
@@ -119,7 +124,8 @@ namespace MeiyounaiseOsu.Discord
         {
             Console.WriteLine("Polling for new top plays");
             var usersToUpdate = new Dictionary<string, KeyValuePair<long, double>>();
-            foreach (var guild in DataStorage.Guilds.Where(guild => guild.TrackedUsers.Count != 0 && guild.OsuChannel != 0))
+            foreach (var guild in DataStorage.Guilds.Where(guild =>
+                guild.TrackedUsers.Count != 0 && guild.OsuChannel != 0))
             {
                 foreach (var (user, oldTop) in guild.TopPlays)
                 {
@@ -136,7 +142,7 @@ namespace MeiyounaiseOsu.Discord
                         var map = await play.GetBeatmapAsync();
                         var player = await play.GetUserAsync();
                         var ssData = await OppaiClient.GetPPAsync(map.BeatmapId, play.Mods, 100, map.MaxCombo);
-                        
+
                         var isDt = play.Mods.ToString().ToLower().Contains("doubletime") ||
                                    play.Mods.ToString().ToLower().Contains("nightcore");
                         var ssText = play.Rank != "SS" ? $" *({Math.Round(ssData.Pp, 2)}pp for SS)*" : "";

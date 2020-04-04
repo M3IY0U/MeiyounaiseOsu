@@ -8,6 +8,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using MeiyounaiseOsu.Discord;
 using MeiyounaiseOsu.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using OsuSharp;
 
 namespace MeiyounaiseOsu.Core
@@ -15,7 +16,7 @@ namespace MeiyounaiseOsu.Core
     internal class Bot : IDisposable
     {
         public static DiscordClient Client;
-        private CommandsNextModule _cnext;
+        private CommandsNextExtension _cnext;
 
         public Bot()
         {
@@ -32,18 +33,18 @@ namespace MeiyounaiseOsu.Core
                 ModeSeparator = " | "
             });
 
-            var interactivity = Client.UseInteractivity(new InteractivityConfiguration());
+            Client.UseInteractivity(new InteractivityConfiguration());
 
-            var deps = new DependencyCollectionBuilder()
-                .AddInstance(interactivity)
-                .AddInstance(osuClient);
+            var deps = new ServiceCollection()
+                .AddSingleton(osuClient)
+                .BuildServiceProvider();
+            
 
             _cnext = Client.UseCommandsNext(new CommandsNextConfiguration
             {
                 EnableDms = false,
-                StringPrefix = "<",
-                CustomPrefixPredicate = CustomPrefixPredicate,
-                Dependencies = deps.Build()
+                PrefixResolver = CustomPrefixPredicate,
+                Services = deps
             });
 
             Client.GuildCreated += Guild.ClientOnGuildCreated;
