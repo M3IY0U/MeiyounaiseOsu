@@ -88,7 +88,7 @@ namespace MeiyounaiseOsu.Discord
                 await ctx.RespondAsync("Didn't receive confirmation or timed out, aborting.");
         }
 
-        public static async Task FetchTopPlays(ReadyEventArgs e)
+        public static async Task FetchTopPlays(GuildDownloadCompletedEventArgs guildDownloadCompletedEventArgs)
         {
             try
             {

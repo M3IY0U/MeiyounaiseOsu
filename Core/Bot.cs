@@ -49,7 +49,7 @@ namespace MeiyounaiseOsu.Core
 
             Client.GuildCreated += Guild.ClientOnGuildCreated;
             Client.MessageCreated += Guild.LogBeatmap;
-            Client.Ready += Tracking.FetchTopPlays;
+            Client.GuildDownloadCompleted += Tracking.FetchTopPlays;
             Client.SocketErrored += args =>
             {
                 var ex = args.Exception;
@@ -61,7 +61,7 @@ namespace MeiyounaiseOsu.Core
                 Console.ResetColor();
                 return Task.CompletedTask;
             };
-
+            
             _cnext.RegisterCommands(Assembly.GetEntryAssembly());
             var pollingTimer = new Timer
             {
