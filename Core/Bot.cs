@@ -50,6 +50,17 @@ namespace MeiyounaiseOsu.Core
             Client.GuildCreated += Guild.ClientOnGuildCreated;
             Client.MessageCreated += Guild.LogBeatmap;
             Client.Ready += Tracking.FetchTopPlays;
+            Client.SocketErrored += args =>
+            {
+                var ex = args.Exception;
+                while (ex is AggregateException)
+                    ex = ex.InnerException;
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}]Socket threw an exception {ex.GetType()}: {ex.Message}");
+                Console.ResetColor();
+                return Task.CompletedTask;
+            };
 
             _cnext.RegisterCommands(Assembly.GetEntryAssembly());
             var pollingTimer = new Timer
