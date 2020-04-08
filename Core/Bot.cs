@@ -35,7 +35,7 @@ namespace MeiyounaiseOsu.Core
 
             Client.UseInteractivity(new InteractivityConfiguration());
 
-            var deps = new ServiceCollection()
+            var serviceProvider = new ServiceCollection()
                 .AddSingleton(osuClient)
                 .BuildServiceProvider();
             
@@ -44,7 +44,7 @@ namespace MeiyounaiseOsu.Core
             {
                 EnableDms = false,
                 PrefixResolver = CustomPrefixPredicate,
-                Services = deps
+                Services = serviceProvider
             });
 
             Client.GuildCreated += Guild.ClientOnGuildCreated;
@@ -57,7 +57,7 @@ namespace MeiyounaiseOsu.Core
                     ex = ex.InnerException;
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}]Socket threw an exception {ex.GetType()}: {ex.Message}");
+                Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}]Socket threw an exception {ex?.GetType()}: {ex?.Message}");
                 Console.ResetColor();
                 return Task.CompletedTask;
             };

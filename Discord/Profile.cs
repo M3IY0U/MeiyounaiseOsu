@@ -9,7 +9,7 @@ using OsuSharp;
 
 namespace MeiyounaiseOsu.Discord
 {
-    public class Profile
+    public class Profile : BaseCommandModule
     {
         private OsuClient Client;
 

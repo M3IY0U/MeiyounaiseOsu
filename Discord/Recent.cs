@@ -65,7 +65,7 @@ namespace MeiyounaiseOsu.Discord
 
             var recents = await Client.GetUserRecentsByUsernameAsync(username, gm);
             if (!recents.Any())
-                throw new Exception($"User `{username}` has no recent plays! (in the past 24 hours)");
+                throw new Exception($"User `{username}` has no recent osu!{gm} plays! (in the past 24 hours)");
 
             var score = recents.First();
 
@@ -93,16 +93,16 @@ namespace MeiyounaiseOsu.Discord
             var eb = new DiscordEmbedBuilder()
                 .WithColor(ctx.Member.Color)
                 .WithAuthor($"{map.Title} [{map.Difficulty}] +{score.Mods} [{Math.Round(pData.Stars, 2)}★]",
-                    $"https://osu.ppy.sh/users/{score.UserId}", $"http://s.ppy.sh/a/{score.UserId}")
+                    $"{map.BeatmapUri}", $"http://s.ppy.sh/a/{score.UserId}")
                 .WithThumbnailUrl(map.ThumbnailUri)
                 .WithDescription(
                     $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pData.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                     $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                     $"{completion}" +
-                    $"» **[Map Link]({map.BeatmapUri})**")
+                    $"» **[User Profile](https://osu.ppy.sh/users/{score.UserId})**")
                 .WithFooter(
                     $"Submitted {score.Date.Humanize()} | Try #{tries}");
-            await ctx.RespondAsync(embed: eb.Build());
+            await ctx.RespondAsync($"**Most recent osu!{gm} play for {username}:**", embed: eb.Build());
             DataStorage.GetGuild(ctx.Guild).UpdateBeatmapInChannel(ctx.Channel.Id, map.BeatmapId);
         }
     }

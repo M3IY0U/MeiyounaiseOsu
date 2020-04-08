@@ -122,14 +122,23 @@ namespace MeiyounaiseOsu.Discord
 
         public static async void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("Polling for new top plays");
             var usersToUpdate = new Dictionary<string, KeyValuePair<long, double>>();
             foreach (var guild in DataStorage.Guilds.Where(guild =>
                 guild.TrackedUsers.Count != 0 && guild.OsuChannel != 0))
             {
                 foreach (var (user, oldTop) in guild.TopPlays)
                 {
-                    var newTop = await _client.GetUserBestsByUsernameAsync(user, GameMode.Standard, 50);
+                    IReadOnlyList<Score> newTop;
+                    try
+                    {
+                        newTop = await _client.GetUserBestsByUsernameAsync(user, GameMode.Standard, 50);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine($"Something went wrong trying to get {user}'s top plays: {exception.Message}");
+                        continue;
+                    }
+                    
                     if (newTop.SequenceEqual(oldTop))
                         continue;
 
@@ -159,8 +168,7 @@ namespace MeiyounaiseOsu.Discord
                                 $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {ssText}\n" +
                                 $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
                                 $"» {Math.Round(DataStorage.GetUser(user).Pp, 2)}pp ⇒ **{Math.Round(player.PerformancePoints, 2)}pp** ({gain}pp)\n" +
-                                $"» #{DataStorage.GetUser(user).Rank} ⇒ **#{player.Rank}** ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n" +
-                                $"» **[Map Link]({map.BeatmapUri})**")
+                                $"» #{DataStorage.GetUser(user).Rank} ⇒ **#{player.Rank}** ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n")
                             .WithFooter("Submitted " + play.Date?.Humanize());
                         var channel = await Bot.Client.GetChannelAsync(guild.OsuChannel);
                         await channel.SendMessageAsync(embed: eb.Build());

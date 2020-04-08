@@ -29,19 +29,19 @@ namespace MeiyounaiseOsu.Discord
             await ShowTop(ctx, args, GameMode.Standard);
         }
 
-        [Command("taikotop")]
+        [Command("taikotop"), Hidden]
         public async Task TaikoProfile(CommandContext ctx, [RemainingText] string args = "")
         {
             await ShowTop(ctx, args, GameMode.Taiko);
         }
 
-        [Command("maniatop")]
+        [Command("maniatop"), Hidden]
         public async Task ManiaProfile(CommandContext ctx, [RemainingText] string args = "")
         {
             await ShowTop(ctx, args, GameMode.Mania);
         }
 
-        [Command("catchtop")]
+        [Command("catchtop"), Hidden]
         public async Task CatchProfile(CommandContext ctx, [RemainingText] string args = "")
         {
             await ShowTop(ctx, args, GameMode.Catch);
@@ -97,7 +97,7 @@ namespace MeiyounaiseOsu.Discord
             {
                 var eb = new DiscordEmbedBuilder()
                     .WithColor(new DiscordColor(220, 152, 164))
-                    .WithAuthor($"Top osu! Standard Plays for {scores.First().Username}",
+                    .WithAuthor($"Top osu! {mode} Plays for {scores.First().Username}",
                         $"https://osu.ppy.sh/users/{scores.First().UserId}",
                         $"http://s.ppy.sh/a/{scores.First().UserId}");
                 var pages = new List<Page>();
@@ -160,7 +160,7 @@ namespace MeiyounaiseOsu.Discord
                 var eb = new DiscordEmbedBuilder()
                     .WithDescription(content)
                     .WithColor(DiscordColor.Gold)
-                    .WithAuthor($"Top osu! Standard Plays for {scores.First().Username}",
+                    .WithAuthor($"Top osu! {mode} Plays for {scores.First().Username}",
                         $"https://osu.ppy.sh/users/{scores.First().UserId}",
                         $"http://s.ppy.sh/a/{scores.First().UserId}");
                 await ctx.RespondAsync(embed: eb.Build());

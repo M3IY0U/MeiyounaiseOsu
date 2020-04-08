@@ -53,31 +53,22 @@ namespace MeiyounaiseOsu.Core
             GC.Collect();
             GC.WaitForPendingFinalizers();
             var handler = new HttpClientHandler();
-            using (var httpClient = new HttpClient(handler, false))
-            {
-                using (var request = new HttpRequestMessage(HttpMethod.Get, requestUri))
-                {
-                    using (
-                        Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(),
-                        stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None, 4096,
-                            true))
-                    {
-                        await contentStream.CopyToAsync(stream);
-                    }
-                }
-            }
+            using var httpClient = new HttpClient(handler, false);
+            using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            await using Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(),
+                stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None, 4096,
+                    true);
+            await contentStream.CopyToAsync(stream);
         }
         
         public static async Task<string> ToHastebin(string content)
         {
-            using (var client = new HttpClient())
-            {
-                var response = await client.PostAsync("https://haste.timostestdoma.in/documents",
-                    new StringContent(content));
-                var rs = await response.Content.ReadAsStringAsync();
-                var data = JsonConvert.DeserializeObject<dynamic>(rs);
-                return $"https://haste.timostestdoma.in/{data.key}";
-            }
+            using var client = new HttpClient();
+            var response = await client.PostAsync("https://haste.timostestdoma.in/documents",
+                new StringContent(content));
+            var rs = await response.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<dynamic>(rs);
+            return $"https://haste.timostestdoma.in/{data.key}";
         }
 
     }
