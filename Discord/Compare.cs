@@ -10,7 +10,7 @@ using OsuSharp.Oppai;
 
 namespace MeiyounaiseOsu.Discord
 {
-    public class Compare
+    public class Compare : BaseCommandModule
     {
         private OsuClient Client;
 
