@@ -66,10 +66,10 @@ namespace MeiyounaiseOsu.Discord
                 .WithAuthor($"{profile.Username}'s osu! {gameMode.Humanize()} profile",
                     $"https://osu.ppy.sh/users/{profile.UserId}")
                 .WithColor(new DiscordColor(220, 152, 164))
-                .WithThumbnailUrl($"http://s.ppy.sh/a/{profile.UserId}")
+                .WithThumbnail($"http://s.ppy.sh/a/{profile.UserId}")
                 .WithDescription($"**Rank** » #{profile.Rank} ({profile.Country}: #{profile.CountryRank})\n" +
-                                 $"**PP** » {Math.Round(profile.PerformancePoints)}\n" +
-                                 $"**Accuracy** » {Math.Round(profile.Accuracy, 2)}%\n" +
+                                 $"**PP** » {Math.Round(profile.PerformancePoints ?? 0)}\n" +
+                                 $"**Accuracy** » {Math.Round(profile.Accuracy ?? 0, 2)}%\n" +
                                  $"**Playcount** » {profile.PlayCount}\n" +
                                  $"**Joined** » {profile.JoinDate.Humanize()}\n");
 

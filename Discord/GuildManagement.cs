@@ -7,7 +7,7 @@ using Utilities = MeiyounaiseOsu.Core.Utilities;
 
 namespace MeiyounaiseOsu.Discord
 {
-    public class GuildManagement
+    public class GuildManagement :BaseCommandModule
     {
         [Command("prefix")]
         public async Task Prefix(CommandContext ctx, string prefix = "")

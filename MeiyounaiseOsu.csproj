@@ -6,12 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00682" />
-      <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00682" />
-      <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00682" />
-      <PackageReference Include="Humanizer" Version="2.7.9" />
-      <PackageReference Include="OsuSharp" Version="5.4.2" />
-      <PackageReference Include="OsuSharp.Oppai" Version="5.4.2" />
+      <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00703" />
+      <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00703" />
+      <PackageReference Include="DSharpPlus.Interactivity" Version="4.0.0-nightly-00703" />
+      <PackageReference Include="Humanizer" Version="2.8.26" />
+      <PackageReference Include="OsuSharp" Version="5.4.4" />
+      <PackageReference Include="OsuSharp.Oppai" Version="5.4.4" />
     </ItemGroup>
 
 </Project>

@@ -94,7 +94,7 @@ namespace MeiyounaiseOsu.Discord
                 .WithColor(ctx.Member.Color)
                 .WithAuthor($"{map.Title} [{map.Difficulty}] +{score.Mods} [{Math.Round(pData.Stars, 2)}★]",
                     $"{map.BeatmapUri}", $"http://s.ppy.sh/a/{score.UserId}")
-                .WithThumbnailUrl(map.ThumbnailUri)
+                .WithThumbnail(map.ThumbnailUri)
                 .WithDescription(
                     $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pData.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                     $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +

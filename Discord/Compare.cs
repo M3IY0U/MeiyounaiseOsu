@@ -64,7 +64,7 @@ namespace MeiyounaiseOsu.Discord
 
                 desc += $"■ **`{score.Mods}` Score** [{Math.Round(fcData.Stars, 2)}★]\n".Replace("None",
                             "No Mod") +
-                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? 0.0, 2)}** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
+                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? 0.0, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                         $"» Score set {score.Date.Humanize()}\n";
             }
@@ -73,7 +73,7 @@ namespace MeiyounaiseOsu.Discord
                 .WithAuthor($"Top osu! Standard Plays for {username} on {map.Title} [{map.Difficulty}]",
                     $"https://osu.ppy.sh/users/{userId}", $"http://s.ppy.sh/a/{userId}")
                 .WithDescription($"{desc}\n» **[Map Link]({map.BeatmapUri})**")
-                .WithThumbnailUrl(map.ThumbnailUri)
+                .WithThumbnail(map.ThumbnailUri)
                 .WithColor(ctx.Member.Color);
             await ctx.RespondAsync(embed: eb.Build());
         }

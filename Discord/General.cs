@@ -51,13 +51,13 @@ namespace MeiyounaiseOsu.Discord
                 throw new Exception("One or more users not found!");
 
             var user1String = string.Join("\n", $"» Rank: #{user1.Rank}",
-                $"» Level: {Math.Round(user1.Level, 2)}", $"» PP: {Math.Round(user1.PerformancePoints, 2)}",
-                $"» Accuracy: {Math.Round(user1.Accuracy, 2)}",
+                $"» Level: {Math.Round(user1.Level ?? 0, 2)}", $"» PP: {Math.Round(user1.PerformancePoints ?? 0, 2)}",
+                $"» Accuracy: {Math.Round(user1.Accuracy ?? 0, 2)}",
                 $"» PlayCount: {user1.PlayCount}");
 
             var user2String = string.Join("\n", $"» Rank: #{user2.Rank}",
-                $"» Level: {Math.Round(user2.Level, 2)}", $"» PP: {Math.Round(user2.PerformancePoints, 2)}",
-                $"» Accuracy: {Math.Round(user2.Accuracy, 2)}",
+                $"» Level: {Math.Round(user2.Level ?? 0, 2)}", $"» PP: {Math.Round(user2.PerformancePoints ?? 0, 2)}",
+                $"» Accuracy: {Math.Round(user2.Accuracy ?? 0, 2)}",
                 $"» PlayCount: {user2.PlayCount}");
 
             var eb = new DiscordEmbedBuilder()
@@ -71,7 +71,7 @@ namespace MeiyounaiseOsu.Discord
                     DiscordEmoji.FromName(Bot.Client, $":flag_{user2.Country.TwoLetterISORegionName.ToLower()}:") +
                     " " + user2.Username, user2String, true)
                 .WithDescription(
-                    $"[{user1.Username}](https://osu.ppy.sh/users/{user1.UserId}) is {Math.Round(Math.Abs(user1.PerformancePoints - user2.PerformancePoints))}pp ({Math.Abs(user1.Rank - user2.Rank)} Ranks) {(user1.PerformancePoints > user2.PerformancePoints ? "ahead" : "behind")} of [{user2.Username}](https://osu.ppy.sh/users/{user2.UserId})");
+                    $"[{user1.Username}](https://osu.ppy.sh/users/{user1.UserId}) is {Math.Round(Math.Abs(user1.PerformancePoints ?? 0 - user2.PerformancePoints ?? 0))}pp ({Math.Abs(user1.Rank ?? 0 - user2.Rank ?? 0)} Ranks) {(user1.PerformancePoints > user2.PerformancePoints ? "ahead" : "behind")} of [{user2.Username}](https://osu.ppy.sh/users/{user2.UserId})");
             await ctx.RespondAsync(embed: eb.Build());
         }
     }

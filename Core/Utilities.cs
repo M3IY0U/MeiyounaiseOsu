@@ -45,7 +45,8 @@ namespace MeiyounaiseOsu.Core
 
         public static bool IsChoke(Score score, int? maxCombo)
         {
-            return score.Accuracy < 95 || score.Rank == "F" || (score.Miss >= 1 || (score.MaxCombo <= 0.95 * maxCombo && score.Rank == "S"));
+            return score.Accuracy < 95 || score.Rank == "F" ||
+                   (score.Miss >= 1 || (score.MaxCombo <= 0.95 * maxCombo && score.Rank == "S"));
         }
 
         public static async Task DownloadAsync(Uri requestUri, string filename)
@@ -60,7 +61,7 @@ namespace MeiyounaiseOsu.Core
                     true);
             await contentStream.CopyToAsync(stream);
         }
-        
+
         public static async Task<string> ToHastebin(string content)
         {
             using var client = new HttpClient();
@@ -71,5 +72,24 @@ namespace MeiyounaiseOsu.Core
             return $"https://haste.timostestdoma.in/{data.key}";
         }
 
+        public static DiscordColor MapColor(BeatmapState state)
+        {
+            switch (state)
+            {
+                case BeatmapState.Graveyard:
+                case BeatmapState.WorkInProgress:
+                case BeatmapState.Pending:
+                    return DiscordColor.Black;
+                case BeatmapState.Ranked:
+                    return DiscordColor.Cyan;
+                case BeatmapState.Approved:
+                case BeatmapState.Qualified:
+                    return DiscordColor.SpringGreen;
+                case BeatmapState.Loved:
+                    return DiscordColor.HotPink;
+                default:
+                    return DiscordColor.Red;
+            }
+        }
     }
 }

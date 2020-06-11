@@ -133,7 +133,7 @@ namespace MeiyounaiseOsu.Discord
                     .WithAuthor($"#{num} osu {mode} play for {scores.First().Username}",
                         $"https://osu.ppy.sh/users/{scores.First().UserId}",
                         $"http://s.ppy.sh/a/{scores.First().UserId}")
-                    .WithThumbnailUrl(map.ThumbnailUri)
+                    .WithThumbnail(map.ThumbnailUri)
                     .WithDescription(
                         $"**[{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{score.Mods} [{Math.Round(pp.Stars, 2)}★]\n" +
                         $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** » {Math.Round(score.Accuracy, 2)}%\n" +
