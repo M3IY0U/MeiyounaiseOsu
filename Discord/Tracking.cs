@@ -134,7 +134,7 @@ namespace MeiyounaiseOsu.Discord
                     try
                     {
                         newTop = await _client.GetUserBestsByUsernameAsync(user, GameMode.Standard, 50);
-                        
+
                         if (newTop.SequenceEqual(oldTop))
                             continue;
 
@@ -153,28 +153,28 @@ namespace MeiyounaiseOsu.Discord
                             var ssText = play.Rank != "SS" ? $" *({Math.Round(ssData.Pp, 2)}pp for SS)*" : "";
                             var gain = Math.Round(player.PerformancePoints.Value - DataStorage.GetUser(user).Pp, 2);
 
-                            if (gain <= 0)
+                            if (gain > 0)
                             {
-                                
+                                var eb = new DiscordEmbedBuilder()
+                                    .WithAuthor($"New #{i + 1} for {user}!", $"https://osu.ppy.sh/users/{play.UserId}",
+                                        $"http://s.ppy.sh/a/{play.UserId}")
+                                    .WithThumbnail(map.ThumbnailUri)
+                                    .WithColor(DiscordColor.Gold)
+                                    .WithDescription(
+                                        $"» **[{map.Title} [{map.Difficulty}]](https://osu.ppy.sh/b/{map.BeatmapId})**\n" +
+                                        $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {(!isDt ? map.Bpm : map.Bpm * 1.5)}bpm » +{play.Mods}\n" +
+                                        $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {ssText}\n" +
+                                        $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
+                                        $"» {Math.Round(DataStorage.GetUser(user).Pp, 2)}pp ⇒ **{Math.Round(player.PerformancePoints.Value, 2)}pp** ({(gain > 0 ? "+" : "")}{gain}pp)\n" +
+                                        $"» #{DataStorage.GetUser(user).Rank} ⇒ **#{player.Rank}** ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n")
+                                    .WithFooter("Submitted " + play.Date?.Humanize());
+
+                                var channel = await Bot.Client.GetChannelAsync(guild.OsuChannel);
+                                await channel.SendMessageAsync(embed: eb.Build());
+                                guild.UpdateBeatmapInChannel(channel.Id, map.BeatmapId);
                             }
-                            
-                            var eb = new DiscordEmbedBuilder()
-                                .WithAuthor($"New #{i + 1} for {user}!", $"https://osu.ppy.sh/users/{play.UserId}",
-                                    $"http://s.ppy.sh/a/{play.UserId}")
-                                .WithThumbnail(map.ThumbnailUri)
-                                .WithColor(DiscordColor.Gold)
-                                .WithDescription(
-                                    $"» **[{map.Title} [{map.Difficulty}]](https://osu.ppy.sh/b/{map.BeatmapId})**\n" +
-                                    $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {(!isDt ? map.Bpm : map.Bpm * 1.5)}bpm » +{play.Mods}\n" +
-                                    $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {ssText}\n" +
-                                    $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
-                                    $"» {Math.Round(DataStorage.GetUser(user).Pp, 2)}pp ⇒ **{Math.Round(player.PerformancePoints.Value, 2)}pp** ({(gain > 0 ? "+" : "")}{gain}pp)\n" +
-                                    $"» #{DataStorage.GetUser(user).Rank} ⇒ **#{player.Rank}** ({player.Country.TwoLetterISORegionName}#{player.CountryRank})\n")
-                                .WithFooter("Submitted " + play.Date?.Humanize());
-                            var channel = await Bot.Client.GetChannelAsync(guild.OsuChannel);
-                            await channel.SendMessageAsync(embed: eb.Build());
+
                             guild.TopPlays.TryUpdate(user, newTop.ToList(), oldTop);
-                            guild.UpdateBeatmapInChannel(channel.Id, map.BeatmapId);
                             if (!usersToUpdate.ContainsKey(user))
                                 usersToUpdate.Add(user,
                                     new KeyValuePair<long, double>(player.Rank.Value, player.PerformancePoints.Value));
@@ -185,7 +185,7 @@ namespace MeiyounaiseOsu.Discord
                     {
                         Console.WriteLine(
                             $"Something went wrong trying to get {user}'s top plays: {exception.Message}");
-                        var chn =  await Bot.Client.GetChannelAsync(493557274371948545);
+                        var chn = await Bot.Client.GetChannelAsync(493557274371948545);
                         await chn.SendMessageAsync(
                             $"Something went wrong trying to get {user}'s top plays: {exception.Message}");
                     }

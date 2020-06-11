@@ -47,12 +47,17 @@ namespace MeiyounaiseOsu.Discord
             var acc99 = await map.GetPPAsync(99f);
             var accSs = await map.GetPPAsync(100f);
 
+            var footerText = map.State == BeatmapState.Ranked || map.State == BeatmapState.Loved ||
+                             map.State == BeatmapState.Approved
+                ? $"Ranked/Loved: {map.ApprovedDate:dd.MM.yy H:mm}"
+                : "";
+
             var eb = new DiscordEmbedBuilder()
                     .WithAuthor($"{map.Author}'s set", map.BeatmapUri.AbsoluteUri)
                     .WithThumbnail(map.ThumbnailUri)
                     .WithColor(Utilities.MapColor(map.State))
                     .WithFooter(
-                        $"Ranked/Loved {map.ApprovedDate:dd.MM.yy H:mm} » Submitted {map.SubmitDate:dd.MM.yy H:mm} » last updated {map.LastUpdate:dd.MM.yy H:mm}")
+                        $"{footerText} » Submitted: {map.SubmitDate:dd.MM.yy H:mm} » Last updated: {map.LastUpdate:dd.MM.yy H:mm}")
                     .WithTitle($"{map.Artist} - {map.Title} [{map.Difficulty}]")
                     .WithDescription(
                         $"» **Length:** {TimeSpan.FromSeconds(map.TotalLength.TotalSeconds):mm\\:ss} ({TimeSpan.FromSeconds(map.HitLength.TotalSeconds):mm\\:ss} Drain) » **BPM:** {map.Bpm} » **Difficulty:** {Math.Round(map.StarRating ?? 0, 2)}★\n" +
@@ -63,7 +68,6 @@ namespace MeiyounaiseOsu.Discord
                         $"» {map.PlayCount} plays/{map.PassCount} passes ({Math.Round(map.PassCount.GetValueOrDefault() / (float) map.PlayCount.GetValueOrDefault() * 100, 2)}% success rate)\n" +
                         $"» {map.CircleCount} circles, {map.SliderCount} sliders, {map.SpinnerCount} spinners\n" +
                         $"» Genre: {map.Genre} » Language: {map.Language}")
-                    
                 ;
 
             await ctx.RespondAsync(embed: eb.Build());
