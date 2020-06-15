@@ -140,6 +140,7 @@ namespace MeiyounaiseOsu.Discord
                         $"» {score.TotalScore} » {score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                         $"» Achieved on {score.Date:dd.MM.yy H:mm:ss}\n\n");
                 await ctx.RespondAsync(embed: eb.Build());
+                DataStorage.GetGuild(ctx.Guild).UpdateBeatmapInChannel(ctx.Channel.Id, map.BeatmapId);
             }
             //Default, show top 5 plays
             else

@@ -85,8 +85,9 @@ namespace MeiyounaiseOsu.Discord
                     $"» {map.CircleCount} circles, {map.SliderCount} sliders, {map.SpinnerCount} spinners\n" +
                     $"» Genre: {map.Genre} » Language: {map.Language}\n" +
                     $"{(set.Count > 1 ? otherDiffs : "")}");
-
+            
             await ctx.RespondAsync(embed: eb.Build());
+            DataStorage.GetGuild(ctx.Guild).UpdateBeatmapInChannel(ctx.Channel.Id, map.BeatmapId);
         }
 
         [Command("with")]
@@ -133,6 +134,7 @@ namespace MeiyounaiseOsu.Discord
                     $"» 99%: {Math.Round(acc99.Pp, 2)}pp » 100%: {Math.Round(accSs.Pp, 2)}pp")
                 .WithFooter("pp values will be slightly inaccurate due to an outdated library");
             await ctx.RespondAsync(embed: eb.Build());
+            DataStorage.GetGuild(ctx.Guild).UpdateBeatmapInChannel(ctx.Channel.Id, map.BeatmapId);
         }
     }
 }
