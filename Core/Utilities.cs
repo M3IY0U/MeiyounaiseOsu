@@ -14,7 +14,9 @@ namespace MeiyounaiseOsu.Core
     public class Utilities
     {
         private static readonly Dictionary<string, string> Keys;
-        public static readonly Regex MapUrls = new Regex(@"https?://osu.ppy.sh/b(eatmapsets)?/[0-9]+(#[A-z]+/[0-9]+)?");
+
+        public static readonly Regex MapUrls =
+            new Regex(@"https?://osu.ppy.sh/b(eatmap(s)?(sets)?)?/[0-9]+(#[A-z]+/[0-9]+)?");
 
 
         static Utilities()
@@ -48,6 +50,10 @@ namespace MeiyounaiseOsu.Core
             return score.Accuracy < 95 || score.Rank == "F" ||
                    (score.Miss >= 1 || (score.MaxCombo <= 0.95 * maxCombo && score.Rank == "S"));
         }
+
+        public static bool HasLeaderboard(BeatmapState state) =>
+            state == BeatmapState.Ranked || state == BeatmapState.Loved ||
+            state == BeatmapState.Approved;
 
         public static async Task DownloadAsync(Uri requestUri, string filename)
         {
@@ -89,6 +95,30 @@ namespace MeiyounaiseOsu.Core
                     return DiscordColor.HotPink;
                 default:
                     return DiscordColor.Red;
+            }
+        }
+
+        public static Mode StringToMod(string mod)
+        {
+            switch (mod.ToLower())
+            {
+                case "nf":
+                    return Mode.NoFail;
+                case "ez":
+                    return Mode.Easy;
+                case "hd":
+                    return Mode.Hidden;
+                case "hr":
+                    return Mode.HardRock;
+                case "dt":
+                case "nc":
+                    return Mode.DoubleTime;
+                case "ht":
+                    return Mode.HalfTime;
+                case "fl":
+                    return Mode.Flashlight;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
