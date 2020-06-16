@@ -33,7 +33,7 @@ namespace MeiyounaiseOsu.Discord
             await Exec(ctx, GameMode.Taiko, username);
         }
 
-        [Command("ctb")]
+        [Command("ctb"), Aliases("catch")]
         public async Task Ctb(CommandContext ctx, string username = "")
         {
             await Exec(ctx, GameMode.Catch, username);
@@ -58,7 +58,7 @@ namespace MeiyounaiseOsu.Discord
                     username = null;
                 }
             }
-            
+
             if (string.IsNullOrEmpty(username))
                 throw new Exception(
                     $"I have no username set for you! Set it using `{DataStorage.GetGuild(ctx.Guild).Prefix}osuset [name]`.");
@@ -76,9 +76,9 @@ namespace MeiyounaiseOsu.Discord
 
             var tries = recents.TakeWhile(s => s.BeatmapId == score.BeatmapId).Count();
 
-            var scoreIfFc = "";
-            if (Utilities.IsChoke(score, map.MaxCombo))
-                scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)} FC)";
+            var scoreIfFc = Utilities.IsChoke(score, map.MaxCombo)
+                ? $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)}% FC)"
+                : "";
 
             var completion = "";
             if (score.Rank == "F")

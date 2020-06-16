@@ -62,16 +62,17 @@ namespace MeiyounaiseOsu.Discord
             var profile = await Client.GetUserByUsernameAsync(username, gameMode);
             if (profile == null)
                 throw new Exception($"No profile with the name {username} was found!");
+            
             var eb = new DiscordEmbedBuilder()
-                .WithAuthor($"{profile.Username}'s osu! {gameMode.Humanize()} profile",
+                .WithAuthor($"{profile.Username}'s osu!{gameMode.Humanize().ToLower()} profile",
                     $"https://osu.ppy.sh/users/{profile.UserId}")
                 .WithColor(new DiscordColor(220, 152, 164))
                 .WithThumbnail($"http://s.ppy.sh/a/{profile.UserId}")
                 .WithDescription($"**Rank** » #{profile.Rank} ({profile.Country}: #{profile.CountryRank})\n" +
-                                 $"**PP** » {Math.Round(profile.PerformancePoints ?? 0)}\n" +
+                                 $"**PP** » {Math.Round(profile.PerformancePoints ?? 0)}pp\n" +
                                  $"**Accuracy** » {Math.Round(profile.Accuracy ?? 0, 2)}%\n" +
                                  $"**Playcount** » {profile.PlayCount}\n" +
-                                 $"**Joined** » {profile.JoinDate.Humanize()}\n");
+                                 $"**Joined** » {profile.JoinDate.Humanize()} ({profile.JoinDate:dd.MM.yy H:mm})\n");
 
             await ctx.RespondAsync(embed: eb.Build());
         }
