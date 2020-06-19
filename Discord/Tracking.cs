@@ -148,11 +148,15 @@ namespace MeiyounaiseOsu.Discord
                             var player = await play.GetUserAsync();
                             var ssData = await OppaiClient.GetPPAsync(map.BeatmapId, play.Mods, 100, map.MaxCombo);
 
-                            var isDt = play.Mods.ToString().ToLower().Contains("doubletime") ||
-                                       play.Mods.ToString().ToLower().Contains("nightcore");
-                            var ssText = play.Rank != "SS" ? $" *({Math.Round(ssData.Pp, 2)}pp for SS)*" : "";
+                            var isDt = play.Mods.ToString().ToLower().Contains("doubletime");
+                            var ssText = play.Rank != "X" || play.Rank == "XH"
+                                ? $" *({Math.Round(ssData.Pp, 2)}pp for SS)*"
+                                : "";
                             var gain = Math.Round(player.PerformancePoints.Value - DataStorage.GetUser(user).Pp, 2);
 
+                            var ncString = play.Mods.ToString().ToLower().Contains("nightcore")
+                                ? play.Mods.ToString().Replace("DoubleTime, ", "")
+                                : null;
                             if (gain > 0)
                             {
                                 var eb = new DiscordEmbedBuilder()
@@ -162,7 +166,7 @@ namespace MeiyounaiseOsu.Discord
                                     .WithColor(DiscordColor.Gold)
                                     .WithDescription(
                                         $"» **[{map.Title} [{map.Difficulty}]](https://osu.ppy.sh/b/{map.BeatmapId})**\n" +
-                                        $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {(!isDt ? map.Bpm : map.Bpm * 1.5)}bpm » +{play.Mods}\n" +
+                                        $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {(!isDt ? map.Bpm : map.Bpm * 1.5)}bpm » +{ncString ?? play.Mods.ToString()}\n" +
                                         $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {ssText}\n" +
                                         $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
                                         $"» {Math.Round(DataStorage.GetUser(user).Pp, 2)}pp ⇒ **{Math.Round(player.PerformancePoints.Value, 2)}pp** ({(gain > 0 ? "+" : "")}{gain}pp)\n" +

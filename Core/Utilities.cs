@@ -100,26 +100,18 @@ namespace MeiyounaiseOsu.Core
 
         public static Mode StringToMod(string mod)
         {
-            switch (mod.ToLower())
+            return mod.ToLower() switch
             {
-                case "nf":
-                    return Mode.NoFail;
-                case "ez":
-                    return Mode.Easy;
-                case "hd":
-                    return Mode.Hidden;
-                case "hr":
-                    return Mode.HardRock;
-                case "dt":
-                case "nc":
-                    return Mode.DoubleTime;
-                case "ht":
-                    return Mode.HalfTime;
-                case "fl":
-                    return Mode.Flashlight;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                "nf" => Mode.NoFail,
+                "ez" => Mode.Easy,
+                "hd" => Mode.Hidden,
+                "hr" => Mode.HardRock,
+                "dt" => Mode.DoubleTime,
+                "nc" => Mode.DoubleTime,
+                "ht" => Mode.HalfTime,
+                "fl" => Mode.Flashlight,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }

@@ -61,8 +61,11 @@ namespace MeiyounaiseOsu.Discord
                 {
                     scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)} FC)";
                 }
+                var ncString = score.Mods.ToString().ToLower().Contains("nightcore")
+                    ? score.Mods.ToString().Replace("DoubleTime, ", "")
+                    : null;
 
-                desc += $"■ **`{score.Mods}` Score** [{Math.Round(fcData.Stars, 2)}★]\n".Replace("None",
+                desc += $"■ **`{ncString ?? score.Mods.ToString()}` Score** [{Math.Round(fcData.Stars, 2)}★]\n".Replace("None",
                             "No Mod") +
                         $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? 0.0, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » x{score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +

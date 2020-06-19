@@ -108,9 +108,20 @@ namespace MeiyounaiseOsu.Discord
                 {
                     var map = await score.GetBeatmapAsync();
                     var pp = await score.GetPPAsync();
+                    var scoreIfFc = "";
+                    if (Utilities.IsChoke(score, map.MaxCombo))
+                    {
+                        var fcData = await OppaiClient.GetPPAsync(map.BeatmapId, score.Mods, (float) score.Accuracy,
+                            map.MaxCombo);
+                        scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)}% FC)";
+                    }
+
+                    var ncString = score.Mods.ToString().ToLower().Contains("nightcore")
+                        ? score.Mods.ToString().Replace("DoubleTime, ", "")
+                        : null;
                     content +=
-                        $"**#{counter + 1} [{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{score.Mods} [{Math.Round(pp.Stars, 2)}★]\n" +
-                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** » {Math.Round(score.Accuracy, 2)}%\n" +
+                        $"**#{counter + 1} [{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pp.Stars, 2)}★]\n" +
+                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » {score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                         $"» Achieved on {score.Date:dd.MM.yy H:mm:ss}\n\n";
 
@@ -128,6 +139,14 @@ namespace MeiyounaiseOsu.Discord
                 var score = scores[num - 1];
                 var map = await score.GetBeatmapAsync();
                 var pp = await score.GetPPAsync();
+                var fcData =
+                    await OppaiClient.GetPPAsync(map.BeatmapId, score.Mods, (float) score.Accuracy, map.MaxCombo);
+                var scoreIfFc = Utilities.IsChoke(score, map.MaxCombo)
+                    ? $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)}% FC)"
+                    : "";
+                var ncString = score.Mods.ToString().ToLower().Contains("nightcore")
+                    ? score.Mods.ToString().Replace("DoubleTime, ", "")
+                    : null;
                 var eb = new DiscordEmbedBuilder()
                     .WithColor(DiscordColor.Gold)
                     .WithAuthor($"#{num} osu {mode} play for {scores.First().Username}",
@@ -135,8 +154,8 @@ namespace MeiyounaiseOsu.Discord
                         $"http://s.ppy.sh/a/{scores.First().UserId}")
                     .WithThumbnail(map.ThumbnailUri)
                     .WithDescription(
-                        $"**[{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{score.Mods} [{Math.Round(pp.Stars, 2)}★]\n" +
-                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** » {Math.Round(score.Accuracy, 2)}%\n" +
+                        $"**[{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pp.Stars, 2)}★]\n" +
+                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » {score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                         $"» Achieved on {score.Date:dd.MM.yy H:mm:ss}\n\n");
                 await ctx.RespondAsync(embed: eb.Build());
@@ -151,9 +170,20 @@ namespace MeiyounaiseOsu.Discord
                 {
                     var map = await score.GetBeatmapAsync();
                     var pp = await score.GetPPAsync();
+                    var scoreIfFc = "";
+                    if (Utilities.IsChoke(score, map.MaxCombo))
+                    {
+                        var fcData = await OppaiClient.GetPPAsync(map.BeatmapId, score.Mods, (float) score.Accuracy,
+                            map.MaxCombo);
+                        scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)}% FC)";
+                    }
+                    var ncString = score.Mods.ToString().ToLower().Contains("nightcore")
+                        ? score.Mods.ToString().Replace("DoubleTime, ", "")
+                        : null;
+
                     content +=
-                        $"**#{++counter} [{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{score.Mods} [{Math.Round(pp.Stars, 2)}★]\n" +
-                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** » {Math.Round(score.Accuracy, 2)}%\n" +
+                        $"**#{++counter} [{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pp.Stars, 2)}★]\n" +
+                        $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » {score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                         $"» Achieved on {score.Date:dd.MM.yy H:mm}\n\n";
                 }

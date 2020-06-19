@@ -89,10 +89,14 @@ namespace MeiyounaiseOsu.Discord
                 var point = Convert.ToDouble(objectTimes[hits - 1] - objectTimes[0]);
                 completion = $"» **Map Completion:** {Math.Round((point / timing) * 100, 2)}%\n";
             }
+            var ncString = score.Mods.ToString().ToLower().Contains("nightcore")
+                ? score.Mods.ToString().Replace("DoubleTime, ", "")
+                : null;
+
 
             var eb = new DiscordEmbedBuilder()
                 .WithColor(ctx.Member.Color)
-                .WithAuthor($"{map.Title} [{map.Difficulty}] +{score.Mods} [{Math.Round(pData.Stars, 2)}★]",
+                .WithAuthor($"{map.Title} [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pData.Stars, 2)}★]",
                     $"{map.BeatmapUri}", $"http://s.ppy.sh/a/{score.UserId}")
                 .WithThumbnail(map.ThumbnailUri)
                 .WithDescription(

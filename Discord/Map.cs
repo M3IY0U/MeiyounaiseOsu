@@ -119,6 +119,11 @@ namespace MeiyounaiseOsu.Discord
             for (var i = 0; i < mod.Length; i += 2)
                 mods |= Utilities.StringToMod(mod.Substring(i, 2));
 
+            var isDt = mods.ToString().ToLower().Contains("doubletime");
+            
+            var ncString = mods.ToString().ToLower().Contains("nightcore")
+                ? mods.ToString().Replace("DoubleTime, ", "")
+                : null;
 
             var acc95 = await map.GetPPAsync(mods, 95f);
             var acc98 = await map.GetPPAsync(mods, 98f);
@@ -128,8 +133,9 @@ namespace MeiyounaiseOsu.Discord
             var eb = new DiscordEmbedBuilder()
                 .WithThumbnail(map.ThumbnailUri)
                 .WithColor(Utilities.MapColor(map.State))
-                .WithAuthor($"{map.Title} [{map.Difficulty}] +{accSs.Mods}", map.BeatmapUri.ToString())
+                .WithAuthor($"{map.Title} [{map.Difficulty}] +{ncString ?? accSs.Mods.ToString()}", map.BeatmapUri.ToString())
                 .WithDescription(
+                    $"» **{Math.Round(accSs.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {(!isDt ? map.Bpm : map.Bpm * 1.5)}bpm\n" +
                     $"» 95%: {Math.Round(acc95.Pp, 2)}pp » 98%: {Math.Round(acc98.Pp, 2)}pp\n" +
                     $"» 99%: {Math.Round(acc99.Pp, 2)}pp » 100%: {Math.Round(accSs.Pp, 2)}pp")
                 .WithFooter("pp values will be slightly inaccurate due to an outdated library");
