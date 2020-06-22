@@ -65,9 +65,9 @@ namespace MeiyounaiseOsu.Discord
                 argList.RemoveAt(marker);
             }
 
-            if (args.Contains("-a"))
+            if (args.Contains("-a") || args.Contains("-r") || args.Contains("-rr"))
             {
-                var marker = argList.IndexOf("-a");
+                var marker = argList.FindIndex(a => a == "-r" || a == "-a" || a == "-rr");
                 argList.RemoveAt(marker);
             }
 
@@ -164,6 +164,16 @@ namespace MeiyounaiseOsu.Discord
             //Default, show top 5 plays
             else
             {
+                var recent = false;
+                var unsortedScores = scores.ToList();
+                if (args.Contains("-r"))
+                {
+                    recent = true;
+                    scores = args.Contains("-rr")
+                        ? scores.OrderBy(s => s.Date).ToList()
+                        : scores.OrderByDescending(s => s.Date).ToList();
+                }
+
                 var content = "";
                 var counter = 0;
                 foreach (var score in scores.Take(5))
@@ -177,12 +187,13 @@ namespace MeiyounaiseOsu.Discord
                             map.MaxCombo);
                         scoreIfFc = $"({Math.Round(fcData.Pp, 2)}pp for {Math.Round(fcData.Accuracy, 2)}% FC)";
                     }
+
                     var ncString = score.Mods.ToString().ToLower().Contains("nightcore")
                         ? score.Mods.ToString().Replace("DoubleTime, ", "")
                         : null;
 
                     content +=
-                        $"**#{++counter} [{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pp.Stars, 2)}★]\n" +
+                        $"**#{(recent ? unsortedScores.IndexOf(score) + 1 : ++counter)} [{map.Title}](https://osu.ppy.sh/b/{map.BeatmapId})** [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pp.Stars, 2)}★]\n" +
                         $"» {DiscordEmoji.FromName(ctx.Client, $":{score.Rank}_Rank:")} » **{Math.Round(score.PerformancePoints ?? pp.Pp, 2)}pp** {scoreIfFc} » {Math.Round(score.Accuracy, 2)}%\n" +
                         $"» {score.TotalScore} » {score.MaxCombo}/{map.MaxCombo} » [{score.Count300}/{score.Count100}/{score.Count50}/{score.Miss}]\n" +
                         $"» Achieved on {score.Date:dd.MM.yy H:mm}\n\n";
