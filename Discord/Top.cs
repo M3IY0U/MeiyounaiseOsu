@@ -65,8 +65,11 @@ namespace MeiyounaiseOsu.Discord
                 argList.RemoveAt(marker);
             }
 
+            var limit = 100;
+
             if (args.Contains("-a") || args.Contains("-r") || args.Contains("-rr"))
             {
+                limit = 50;
                 var marker = argList.FindIndex(a => a == "-r" || a == "-a" || a == "-rr");
                 argList.RemoveAt(marker);
             }
@@ -90,7 +93,7 @@ namespace MeiyounaiseOsu.Discord
                 throw new Exception(
                     $"I have no username set for you! Set it using `{DataStorage.GetGuild(ctx.Guild).Prefix}osuset [name]`.");
 
-            var scores = await Client.GetUserBestsByUsernameAsync(username, mode);
+            var scores = await Client.GetUserBestsByUsernameAsync(username, mode, limit);
 
             //Show all plays (paginated)
             if (args.Contains("-a"))
