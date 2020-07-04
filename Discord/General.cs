@@ -23,7 +23,10 @@ namespace MeiyounaiseOsu.Discord
             var user = await Client.GetUserByUsernameAsync(username, GameMode.Standard);
             if (user == null)
                 throw new Exception($"No user with name {username} was found!");
-            DataStorage.CreateUser(ctx.User, user.Username);
+            if (DataStorage.GetUser(ctx.User) == null)
+                DataStorage.CreateUser(ctx.User, user.Username);
+            else
+                DataStorage.GetUser(ctx.User).OsuUsername = username;
             await Utilities.ConfirmCommand(ctx.Message);
         }
 
