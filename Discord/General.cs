@@ -28,6 +28,7 @@ namespace MeiyounaiseOsu.Discord
             else
                 DataStorage.GetUser(ctx.User).OsuUsername = username;
             await Utilities.ConfirmCommand(ctx.Message);
+            DataStorage.SaveUsers();
         }
 
         [Command("usercompare"), Aliases("uc", "usercomp")]
