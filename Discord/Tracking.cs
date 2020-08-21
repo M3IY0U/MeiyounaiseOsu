@@ -166,7 +166,7 @@ namespace MeiyounaiseOsu.Discord
                                     .WithColor(DiscordColor.Gold)
                                     .WithDescription(
                                         $"» **[{map.Title} [{map.Difficulty}]](https://osu.ppy.sh/b/{map.BeatmapId})**\n" +
-                                        $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {Math.Round((!isDt ? map.Bpm : map.Bpm * 1.5), 2)}bpm » +{ncString ?? play.Mods.ToString()}\n" +
+                                        $"» **{Math.Round(ssData.Stars, 2)}★** » {TimeSpan.FromSeconds(!isDt ? map.TotalLength.TotalSeconds : map.TotalLength.TotalSeconds / 1.5):mm\\:ss} » {Math.Round((!isDt ? map.Bpm : map.Bpm * 1.5).Value, 2)}bpm » +{ncString ?? play.Mods.ToString()}\n" +
                                         $"» {DiscordEmoji.FromName(Bot.Client, $":{play.Rank}_Rank:")} » **{Math.Round(play.Accuracy, 2)}%** » **{Math.Round(play.PerformancePoints ?? 0.0, 2)}pp** » {ssText}\n" +
                                         $"» {play.TotalScore} » x{play.MaxCombo}/{map.MaxCombo} » [{play.Count300}/{play.Count100}/{play.Count50}/{play.Miss}]\n" +
                                         $"» {Math.Round(DataStorage.GetUser(user).Pp, 2)}pp ⇒ **{Math.Round(player.PerformancePoints.Value, 2)}pp** ({(gain > 0 ? "+" : "")}{gain}pp)\n" +
