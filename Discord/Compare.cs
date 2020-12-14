@@ -14,10 +14,7 @@ namespace MeiyounaiseOsu.Discord
     {
         private OsuClient Client;
 
-        public Compare(OsuClient client)
-        {
-            Client = client;
-        }
+        public Compare(OsuClient client) => Client = client;
 
         [Command("compare"), Aliases("c")]
         public async Task CompareScore(CommandContext ctx, string username = "")

@@ -12,10 +12,7 @@ namespace MeiyounaiseOsu.Discord
     {
         public OsuClient Client;
 
-        public General(OsuClient client)
-        {
-            Client = client;
-        }
+        public General(OsuClient client) => Client = client;
 
         [Command("osuset")]
         public async Task SetUser(CommandContext ctx, string username)

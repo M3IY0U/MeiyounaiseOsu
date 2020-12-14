@@ -16,34 +16,23 @@ namespace MeiyounaiseOsu.Discord
     {
         private OsuClient Client;
 
-        public Recent(OsuClient client)
-        {
-            Client = client;
-        }
+        public Recent(OsuClient client) => Client = client;
 
         [GroupCommand]
         public async Task Osu(CommandContext ctx, string username = "")
-        {
-            await Exec(ctx, GameMode.Standard, username);
-        }
+            => await Exec(ctx, GameMode.Standard, username);
 
         [Command("taiko")]
         public async Task Taiko(CommandContext ctx, string username = "")
-        {
-            await Exec(ctx, GameMode.Taiko, username);
-        }
+            => await Exec(ctx, GameMode.Taiko, username);
 
         [Command("ctb"), Aliases("catch")]
         public async Task Ctb(CommandContext ctx, string username = "")
-        {
-            await Exec(ctx, GameMode.Catch, username);
-        }
+            => await Exec(ctx, GameMode.Catch, username);
 
         [Command("mania")]
         public async Task Mania(CommandContext ctx, string username = "")
-        {
-            await Exec(ctx, GameMode.Mania, username);
-        }
+            => await Exec(ctx, GameMode.Mania, username);
 
         private async Task Exec(CommandContext ctx, GameMode gm, string username)
         {
@@ -89,6 +78,7 @@ namespace MeiyounaiseOsu.Discord
                 var point = Convert.ToDouble(objectTimes[hits - 1] - objectTimes[0]);
                 completion = $"» **Map Completion:** {Math.Round((point / timing) * 100, 2)}%\n";
             }
+
             var ncString = score.Mods.ToString().ToLower().Contains("nightcore")
                 ? score.Mods.ToString().Replace("DoubleTime, ", "")
                 : null;
@@ -96,7 +86,8 @@ namespace MeiyounaiseOsu.Discord
 
             var eb = new DiscordEmbedBuilder()
                 .WithColor(ctx.Member.Color)
-                .WithAuthor($"{map.Title} [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pData.Stars, 2)}★]",
+                .WithAuthor(
+                    $"{map.Title} [{map.Difficulty}] +{ncString ?? score.Mods.ToString()} [{Math.Round(pData.Stars, 2)}★]",
                     $"{map.BeatmapUri}", $"http://s.ppy.sh/a/{score.UserId}")
                 .WithThumbnail(map.ThumbnailUri)
                 .WithDescription(

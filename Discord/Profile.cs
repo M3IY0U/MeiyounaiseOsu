@@ -13,34 +13,26 @@ namespace MeiyounaiseOsu.Discord
     {
         private OsuClient Client;
 
-        public Profile(OsuClient client)
-        {
-            Client = client;
-        }
+        public Profile(OsuClient client) => Client = client;
 
         [Command("osu")]
         public async Task OsuProfile(CommandContext ctx, string username = "")
-        {
-            await ShowProfile(ctx, username, GameMode.Standard);
-        }
+            => await ShowProfile(ctx, username, GameMode.Standard);
+        
 
         [Command("taiko")]
         public async Task TaikoProfile(CommandContext ctx, string username = "")
-        {
-            await ShowProfile(ctx, username, GameMode.Taiko);
-        }
+            => await ShowProfile(ctx, username, GameMode.Taiko);
+        
 
         [Command("mania")]
         public async Task ManiaProfile(CommandContext ctx, string username = "")
-        {
-            await ShowProfile(ctx, username, GameMode.Mania);
-        }
+            => await ShowProfile(ctx, username, GameMode.Mania);
+        
 
-        [Command("catch")]
-        public async Task CatchProfile(CommandContext ctx, string username = "")
-        {
-            await ShowProfile(ctx, username, GameMode.Catch);
-        }
+        [Command("catch"), Aliases("ctb")]
+        public async Task CatchProfile(CommandContext ctx, string username = "") 
+            => await ShowProfile(ctx, username, GameMode.Catch);
 
         private async Task ShowProfile(CommandContext ctx, string username, GameMode gameMode)
         {
@@ -68,7 +60,7 @@ namespace MeiyounaiseOsu.Discord
                     $"https://osu.ppy.sh/users/{profile.UserId}")
                 .WithColor(new DiscordColor(220, 152, 164))
                 .WithThumbnail($"http://s.ppy.sh/a/{profile.UserId}")
-                .WithDescription($"**Rank** » #{profile.Rank} ({profile.Country}: #{profile.CountryRank})\n" +
+                .WithDescription($"**Rank** » #{profile.Rank} ({profile.Country.TwoLetterISORegionName}: #{profile.CountryRank})\n" +
                                  $"**PP** » {Math.Round(profile.PerformancePoints ?? 0)}pp\n" +
                                  $"**Accuracy** » {Math.Round(profile.Accuracy ?? 0, 2)}%\n" +
                                  $"**Playcount** » {profile.PlayCount}\n" +

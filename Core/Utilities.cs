@@ -25,10 +25,8 @@ namespace MeiyounaiseOsu.Core
             Keys = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
 
-        public static string GetKey(string service)
-        {
-            return Keys.ContainsKey(service) ? Keys[service] : "";
-        }
+        public static string GetKey(string service) 
+            => Keys.ContainsKey(service) ? Keys[service] : "";
 
         public static async Task ConfirmCommand(DiscordMessage msg)
             => await msg.CreateReactionAsync(DiscordEmoji.FromUnicode("✅"));
@@ -80,22 +78,17 @@ namespace MeiyounaiseOsu.Core
 
         public static DiscordColor MapColor(BeatmapState state)
         {
-            switch (state)
+            return state switch
             {
-                case BeatmapState.Graveyard:
-                case BeatmapState.WorkInProgress:
-                case BeatmapState.Pending:
-                    return DiscordColor.Black;
-                case BeatmapState.Ranked:
-                    return DiscordColor.Cyan;
-                case BeatmapState.Approved:
-                case BeatmapState.Qualified:
-                    return DiscordColor.SpringGreen;
-                case BeatmapState.Loved:
-                    return DiscordColor.HotPink;
-                default:
-                    return DiscordColor.Red;
-            }
+                BeatmapState.Graveyard => DiscordColor.Black,
+                BeatmapState.WorkInProgress => DiscordColor.Black,
+                BeatmapState.Pending => DiscordColor.Black,
+                BeatmapState.Ranked => DiscordColor.Cyan,
+                BeatmapState.Approved => DiscordColor.SpringGreen,
+                BeatmapState.Qualified => DiscordColor.SpringGreen,
+                BeatmapState.Loved => DiscordColor.HotPink,
+                _ => DiscordColor.Red
+            };
         }
 
         public static Mode StringToMod(string mod)

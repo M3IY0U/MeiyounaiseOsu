@@ -15,10 +15,7 @@ namespace MeiyounaiseOsu.Discord
     {
         private OsuClient Client;
 
-        public Map(OsuClient client)
-        {
-            Client = client;
-        }
+        public Map(OsuClient client) => Client = client;
 
         [Command("mapinfo"), Aliases("mi")]
         public async Task MapInfo(CommandContext ctx, string url = "")

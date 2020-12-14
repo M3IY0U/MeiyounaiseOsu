@@ -17,11 +17,7 @@ namespace MeiyounaiseOsu.Discord
         private OsuClient Client;
         private InteractivityExtension Interactivity;
 
-        public Top(OsuClient client)
-        {
-            Client = client;
-            Interactivity = Bot.Client.GetInteractivity();
-        }
+        public Top(OsuClient client) => (Client, Interactivity) = (client, Bot.Client.GetInteractivity());
 
         [Command("osutop")]
         public async Task OsuProfile(CommandContext ctx, [RemainingText] string args = "")
@@ -75,8 +71,7 @@ namespace MeiyounaiseOsu.Discord
             }
 
             var username = argList.FirstOrDefault();
-
-
+            
             if (string.IsNullOrEmpty(username))
             {
                 try

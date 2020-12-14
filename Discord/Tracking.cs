@@ -22,19 +22,11 @@ namespace MeiyounaiseOsu.Discord
     [Group("track")]
     public class Tracking : BaseCommandModule
     {
-        private static OsuClient _client = new OsuClient(new OsuSharpConfiguration
-        {
-            ApiKey = Utilities.GetKey("osu"),
-            ModeSeparator = " | "
-        });
+        private static OsuClient _client;
 
         private InteractivityExtension Interactivity;
 
-        public Tracking(OsuClient client)
-        {
-            _client = client;
-            Interactivity = Bot.Client.GetInteractivity();
-        }
+        public Tracking(OsuClient client) => (_client, Interactivity) = (client, Bot.Client.GetInteractivity());
 
         [Command("add")]
         public async Task TrackAdd(CommandContext ctx, string username)
